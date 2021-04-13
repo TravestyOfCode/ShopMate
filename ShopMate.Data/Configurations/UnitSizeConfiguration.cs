@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ShopMate.Data.Configurations
 {
-    public class UnitSizeConfiguration : IEntityTypeConfiguration<UnitSize>
+    public class UnitSizeConfiguration : EntityBaseConfiguration<UnitSize>
     {
-        public void Configure(EntityTypeBuilder<UnitSize> builder)
+        public override void Configure(EntityTypeBuilder<UnitSize> builder)
         {
+            base.Configure(builder);
+
             builder.ToTable(nameof(UnitSize));
 
             builder.HasKey(p => p.Id);

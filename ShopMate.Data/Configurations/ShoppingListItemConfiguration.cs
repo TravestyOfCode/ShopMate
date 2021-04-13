@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ShopMate.Data.Configurations
 {
-    public class ShoppingListItemConfiguration : IEntityTypeConfiguration<ShoppingListItem>
+    public class ShoppingListItemConfiguration : EntityBaseConfiguration<ShoppingListItem>
     {
-        public void Configure(EntityTypeBuilder<ShoppingListItem> builder)
+        public override void Configure(EntityTypeBuilder<ShoppingListItem> builder)
         {
+            base.Configure(builder);
+
             builder.ToTable(nameof(ShoppingListItem));
 
             builder.HasKey(p => new { p.ShoppingListId, p.ProductId });

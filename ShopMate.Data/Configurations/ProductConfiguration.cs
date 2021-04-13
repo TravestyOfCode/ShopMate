@@ -3,13 +3,19 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ShopMate.Data.Configurations
 {
-    public class ProductConfiguration : IEntityTypeConfiguration<Product>
+    public class ProductConfiguration : EntityBaseConfiguration<Product>
     {
-        public void Configure(EntityTypeBuilder<Product> builder)
+        public override void Configure(EntityTypeBuilder<Product> builder)
         {
+            base.Configure(builder);
+
             builder.ToTable(nameof(Product));
 
             builder.HasKey(p => p.Id);
+
+            builder.Property(p => p.Id)
+                .IsRequired(true)
+                .ValueGeneratedOnAdd();
 
             builder.Property(p => p.Name)
                 .HasMaxLength(64)
