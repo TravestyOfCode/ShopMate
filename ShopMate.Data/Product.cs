@@ -1,12 +1,12 @@
 ﻿namespace ShopMate.Data
 {
-    public class Product
+    public class Product : EntityBase
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 
-        public int DefaultUnitSizeId { get; set; }
+        public string DefaultUnitSizeId { get; set; }
 
         public UnitSize DefaultUnitSize { get; set; }
     }

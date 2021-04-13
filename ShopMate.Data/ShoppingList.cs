@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ShopMate.Data
 {
-    public class ShoppingList
+    public class ShoppingList : EntityBase
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string UserId { get; set; }
 
