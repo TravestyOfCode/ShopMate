@@ -3,19 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ShopMate.Data;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ShopMate.Application.Products
+namespace ShopMate.Application.UnitSizes
 {
-    public class Index
+    public partial class Delete
     {
-        public class Query : IRequest<IEnumerable<Model>>
+        public class Query : IRequest<Model>
         {
-
+            public int Id { get; set; }
         }
 
         public class Model
@@ -23,12 +21,9 @@ namespace ShopMate.Application.Products
             public string Id { get; set; }
 
             public string Name { get; set; }
-
-            [Display(Name = "Default Unit")]
-            public string DefaultUnitSize { get; set; }
         }
 
-        public class QueryHandler : IRequestHandler<Query, IEnumerable<Model>>
+        public class QueryHandler : IRequestHandler<Query, Model>
         {
             private readonly ApplicationDbContext _dbContext;
 
@@ -41,22 +36,20 @@ namespace ShopMate.Application.Products
                 _logger = logger;
             }
 
-            public async Task<IEnumerable<Model>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Model> Handle(Query request, CancellationToken cancellationToken)
             {
                 try
                 {
-                    return await _dbContext.Products
+                    return await _dbContext.UnitSizes
                         .Select(p => new Model()
                         {
                             Id = p.Id,
-                            Name = p.Name,
-                            DefaultUnitSize = p.DefaultUnitSize.Name
-                        })
-                        .ToListAsync(cancellationToken);
+                            Name = p.Name
+                        }).SingleOrDefaultAsync(p => p.Id.Equals(request.Id));                    
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Unexpected error handling Products.Index.Query with request: {request}", request);
+                    _logger.LogError(ex, "Unexpected error handling UnitSizes.Delete.Query with request: {request}", request);
                     throw;
                 }
             }

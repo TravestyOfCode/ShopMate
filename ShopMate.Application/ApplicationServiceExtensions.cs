@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ShopMate.Data;
+using System.Reflection;
 
 namespace ShopMate.Application
 {
@@ -17,6 +19,8 @@ namespace ShopMate.Application
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddMediatR(Assembly.GetExecutingAssembly());
 
             return services;
         }

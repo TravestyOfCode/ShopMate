@@ -45,10 +45,10 @@ namespace ShopMate.Web.Controllers
 
         [HttpGet]
         public async Task<ActionResult> EditAsync(Edit.Query query)
-        {
+        {            
             var result = await _mediator.Send(query);
             if(result == null)
-            {
+            {                
                 return NotFound(query.Id);
             }
             return View(result);
@@ -58,7 +58,7 @@ namespace ShopMate.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(Edit.Command command)
-        {
+        {            
             await _mediator.Send(command);
             return RedirectToAction(nameof(Index));
         }

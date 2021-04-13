@@ -1,0 +1,12 @@
+﻿@model ShopMate.Application.Products.Edit.Command
+
+@{      
+    ViewData["Title"] = "Edit Product";
+}
+
+<form method="post">
+    <label asp-for="Name"></label>
+    <input asp-for="Name" />
+    <input asp-for="Id" type="hidden" />
+    <button type="submit">Update</button>
+</form>

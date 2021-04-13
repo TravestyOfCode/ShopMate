@@ -1,19 +1,17 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ShopMate.Data;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ShopMate.Application.Products
+namespace ShopMate.Application.UnitSizes
 {
-    public partial class Create
+    public partial class Delete
     {
         public class Command : IRequest<CommandResult>
         {
-            public string Name { get; set; }
-
-            public string DefaultUnitSizeId { get; set; }
+            public int Id { get; set; }
         }
 
         public class CommandHandler : IRequestHandler<Command, CommandResult>
@@ -33,19 +31,25 @@ namespace ShopMate.Application.Products
             {
                 try
                 {
-                    var entity = _dbContext.Add(request.ToProduct());
+                    var entity = await _dbContext.UnitSizes.SingleOrDefaultAsync(p => p.Id.Equals(request.Id));
+
+                    if(entity == null)
+                    {
+                        return CommandResult.NotFound();
+                    }
+
+                    _dbContext.UnitSizes.Remove(entity);
 
                     await _dbContext.SaveChangesAsync(cancellationToken);
 
                     return CommandResult.Ok();
+
                 }
                 catch (System.Exception ex)
                 {
-                    _logger.LogCritical(ex, "Unexpected error handling Product.Create.Command with request: {request}", request);
-                    
+                    _logger.LogError(ex, "Unexpected error handling UnitSizes.Delete.Command with request: {request}", request);
                     return CommandResult.ServerError();
                 }
-
             }
         }
     }

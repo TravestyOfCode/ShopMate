@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ShopMate.Data;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace ShopMate.Application.Products
 
             public int DefaultUnitSizeId { get; set; }
 
-            public Dictionary<int, string> UnitSizes { get; set; }
+            public Dictionary<string, string> UnitSizes { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Model>
@@ -46,7 +47,7 @@ namespace ShopMate.Application.Products
                         UnitSizes = await _dbContext.UnitSizes.ToDictionaryAsync(p => p.Id, p => p.Name)
                     };
                 }
-                catch(System.Exception ex)
+                catch(Exception ex)
                 {
                     _logger.LogError(ex, "Unexpected error handling Product.Create.Query with request: {request}", request);
                     throw;

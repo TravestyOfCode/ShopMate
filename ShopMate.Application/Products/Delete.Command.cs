@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ShopMate.Data;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,12 +9,12 @@ namespace ShopMate.Application.Products
 {
     public partial class Delete
     {
-        public class Command : IRequest<Unit>
+        public class Command : IRequest<CommandResult>
         {
             public int Id { get; set; }
         }
 
-        public class CommandHandler : IRequestHandler<Command, Unit>
+        public class CommandHandler : IRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _dbContext;
 
@@ -28,7 +27,7 @@ namespace ShopMate.Application.Products
                 _logger = logger;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<CommandResult> Handle(Command request, CancellationToken cancellationToken)
             {
                 try
                 {
@@ -36,23 +35,19 @@ namespace ShopMate.Application.Products
 
                     if(entity == null)
                     {
-                        throw new KeyNotFoundException($"The Product with Id: {request.Id} could not be found.");
+                        return CommandResult.NotFound();
                     }
 
                     _dbContext.Products.Remove(entity);
 
                     await _dbContext.SaveChangesAsync(cancellationToken);
 
-                    return Unit.Value;
-                }
-                catch(KeyNotFoundException)
-                {
-                    throw;
+                    return CommandResult.Ok();
                 }
                 catch (System.Exception ex)
                 {
                     _logger.LogError(ex, "Unexpected error handling Products.Delete.Command with request: {request}", request);
-                    throw;
+                    return CommandResult.ServerError();
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using ShopMate.Data;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,12 +9,12 @@ namespace ShopMate.Application.UnitSizes
 {
     public partial class Create
     {
-        public class Command : IRequest<int>
+        public class Command : IRequest<string>
         {
             public string Name { get; set; }
         }
 
-        public class CommandHandler : IRequestHandler<Command, int>
+        public class CommandHandler : IRequestHandler<Command, string>
         {
             private readonly ApplicationDbContext _dbContext;
 
@@ -26,7 +27,7 @@ namespace ShopMate.Application.UnitSizes
                 _logger = logger;
             }
 
-            public async Task<int> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<string> Handle(Command request, CancellationToken cancellationToken)
             {
                 try
                 {
@@ -36,7 +37,7 @@ namespace ShopMate.Application.UnitSizes
 
                     return entity.Entity.Id;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogError(ex, "Unexpected error adding UnitSize with request: {request}", request);
                     throw;

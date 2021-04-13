@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ShopMate.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -18,19 +19,19 @@ namespace ShopMate.Application.Products
 
         public class Model
         {
-            public int Id { get; set; }
+            public string Id { get; set; }
 
             public string Name { get; set; }
 
-            public int DefaultUnitSizeId { get; set; }
+            public string DefaultUnitSizeId { get; set; }
 
-            public Dictionary<int, string> UnitSizes { get; set; }
+            public Dictionary<string, string> UnitSizes { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Model>
         {
             private readonly ApplicationDbContext _dbContext;
-
+            
             private readonly ILogger<QueryHandler> _logger;
 
             public QueryHandler(ApplicationDbContext dbContext, ILogger<QueryHandler> logger)
@@ -53,17 +54,17 @@ namespace ShopMate.Application.Products
                         })
                         .SingleOrDefaultAsync(p => p.Id.Equals(request.Id), cancellationToken);
 
-                    if(request == null)
-                    {
-                        return null;
-                    }
+                    //if(result == null)
+                    //{
+                    //    return null;
+                    //}
 
-                    result.UnitSizes = await _dbContext.UnitSizes.ToDictionaryAsync(p => p.Id, p => p.Name, cancellationToken);
+                    result.UnitSizes = await _dbContext.UnitSizes.ToDictionaryAsync(p => p.Id, p => p.Name);
 
                     return result;
 
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogCritical(ex, "Unexpected error handling Product.Edit.Query with request: {request}", request);
                     throw;

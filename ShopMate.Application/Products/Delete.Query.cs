@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ShopMate.Data;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
@@ -18,7 +19,7 @@ namespace ShopMate.Application.Products
 
         public class Model
         {
-            public int Id { get; set; }
+            public string Id { get; set; }
 
             public string Name { get; set; }
 
@@ -51,7 +52,7 @@ namespace ShopMate.Application.Products
                         })
                         .SingleOrDefaultAsync(p => p.Id.Equals(request.Id), cancellationToken);
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     _logger.LogError(ex, "Unexpected error handling Products.Delete.Query with request: {request}", request);
                     throw;
