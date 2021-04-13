@@ -1,9 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ShopMate.Application;
+using ShopMate.Data;
+using System;
 
 namespace ShopMate.Web
 {
@@ -22,6 +26,7 @@ namespace ShopMate.Web
             services.AddApplicationServices(Configuration);
 
             services.AddControllersWithViews();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -29,7 +34,7 @@ namespace ShopMate.Web
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();                
+                app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -42,7 +47,12 @@ namespace ShopMate.Web
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            app.Use(next => context =>
+            {
+                Console.WriteLine($"Found: {context.GetEndpoint()?.DisplayName}");
+                return next(context);
+            });
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
