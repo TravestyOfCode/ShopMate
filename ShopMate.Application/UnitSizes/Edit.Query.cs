@@ -2,13 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ShopMate.Data;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ShopMate.Application.Products
+namespace ShopMate.Application.UnitSizes
 {
     public partial class Edit
     {
@@ -22,16 +20,12 @@ namespace ShopMate.Application.Products
             public string Id { get; set; }
 
             public string Name { get; set; }
-
-            public string DefaultUnitSizeId { get; set; }
-
-            public Dictionary<string, string> UnitSizes { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Model>
         {
             private readonly ApplicationDbContext _dbContext;
-            
+
             private readonly ILogger<QueryHandler> _logger;
 
             public QueryHandler(ApplicationDbContext dbContext, ILogger<QueryHandler> logger)
@@ -45,22 +39,15 @@ namespace ShopMate.Application.Products
             {
                 try
                 {
-                    var result = await _dbContext.Products
-                        .Select(p => new Model()
-                        {
-                            Id = p.Id,
-                            Name = p.Name,
-                            DefaultUnitSizeId = p.DefaultUnitSizeId
-                        })
-                        .SingleOrDefaultAsync(p => p.Id.Equals(request.Id), cancellationToken);
-
-                    result.UnitSizes = await _dbContext.UnitSizes.ToDictionaryAsync(p => p.Id, p => p.Name);
-
-                    return result;
+                    return await _dbContext.UnitSizes.Select(p => new Model()
+                    {
+                        Id = p.Id,
+                        Name = p.Name
+                    }).SingleOrDefaultAsync(p => p.Id.Equals(request.Id), cancellationToken);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
-                    _logger.LogCritical(ex, "Unexpected error handling Product.Edit.Query with request: {request}", request);
+                    _logger.LogError(ex, "Unexpected error handling UnitSizes.Edit.Query with request: {request}", request);
                     throw;
                 }
             }
