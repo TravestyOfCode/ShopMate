@@ -11,6 +11,10 @@ namespace ShopMate.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpContextAccessor();
+
+            services.AddTransient<ICurrentUser, HttpContextCurrentUser>();
+
             services.AddDbContext<ApplicationDbContext>(options => {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });

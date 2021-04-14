@@ -53,6 +53,7 @@ namespace ShopMate.Web
                 return next(context);
             });
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

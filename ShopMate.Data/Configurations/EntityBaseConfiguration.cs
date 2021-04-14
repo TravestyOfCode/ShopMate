@@ -8,20 +8,16 @@ namespace ShopMate.Data.Configurations
         public virtual void Configure(EntityTypeBuilder<T> builder)
         {
             builder.Property(p => p.CreatedAt)
-                .IsRequired(true)
-                .ValueGeneratedOnAdd();
+                .IsRequired(true);
 
             builder.Property(p => p.CreatedById)
-                .IsRequired(true)
-                .ValueGeneratedOnAdd();
+                .IsRequired(true);
 
             builder.Property(p => p.LastModifiedAt)
-                .IsRequired(true)
-                .ValueGeneratedOnAddOrUpdate();
+                .IsRequired(true);
 
             builder.Property(p => p.LastModifiedById)
-                .IsRequired(true)
-                .ValueGeneratedOnAddOrUpdate();
+                .IsRequired(true);
 
             builder.HasOne(p => p.CreatedBy)
                 .WithMany()
