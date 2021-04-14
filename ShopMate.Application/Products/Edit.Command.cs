@@ -15,7 +15,7 @@ namespace ShopMate.Application.Products
 
             public string Name { get; set; }
 
-            public string DefaultUnitSizeId { get; set; }
+            public int DefaultUnitSizeId { get; set; }
 
             internal void Map(Product product)
             {

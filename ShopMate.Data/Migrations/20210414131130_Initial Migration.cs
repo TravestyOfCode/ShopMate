@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ShopMate.Data.Migrations
 {
-    public partial class Switchtousingstringforkeys : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -156,7 +156,8 @@ namespace ShopMate.Data.Migrations
                 name: "ShoppingList",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     TripDate = table.Column<DateTime>(type: "DATE", nullable: false),
@@ -191,7 +192,8 @@ namespace ShopMate.Data.Migrations
                 name: "UnitSize",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
@@ -217,9 +219,10 @@ namespace ShopMate.Data.Migrations
                 name: "Product",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    DefaultUnitSizeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DefaultUnitSizeId = table.Column<int>(type: "int", nullable: false),
                     CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     LastModifiedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -250,10 +253,10 @@ namespace ShopMate.Data.Migrations
                 name: "ShoppingListItem",
                 columns: table => new
                 {
-                    ShoppingListId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProductId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ShoppingListId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<decimal>(type: "decimal(9,5)", precision: 9, scale: 5, nullable: false),
-                    UnitSizeId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UnitSizeId = table.Column<int>(type: "int", nullable: false),
                     IsComplete = table.Column<bool>(type: "bit", nullable: false),
                     CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
@@ -290,7 +293,7 @@ namespace ShopMate.Data.Migrations
                         column: x => x.UnitSizeId,
                         principalTable: "UnitSize",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

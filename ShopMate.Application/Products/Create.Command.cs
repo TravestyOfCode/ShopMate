@@ -13,7 +13,7 @@ namespace ShopMate.Application.Products
         {
             public string Name { get; set; }
 
-            public string DefaultUnitSizeId { get; set; }
+            public int DefaultUnitSizeId { get; set; }
         }
 
         public class CommandHandler : IRequestHandler<Command, CommandResult>

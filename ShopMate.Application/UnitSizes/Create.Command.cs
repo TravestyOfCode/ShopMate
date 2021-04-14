@@ -9,12 +9,12 @@ namespace ShopMate.Application.UnitSizes
 {
     public partial class Create
     {
-        public class Command : IRequest<string>
+        public class Command : IRequest<CommandResult>
         {
             public string Name { get; set; }
         }
 
-        public class CommandHandler : IRequestHandler<Command, string>
+        public class CommandHandler : IRequestHandler<Command, CommandResult>
         {
             private readonly ApplicationDbContext _dbContext;
 
@@ -27,7 +27,7 @@ namespace ShopMate.Application.UnitSizes
                 _logger = logger;
             }
 
-            public async Task<string> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<CommandResult> Handle(Command request, CancellationToken cancellationToken)
             {
                 try
                 {
@@ -35,7 +35,7 @@ namespace ShopMate.Application.UnitSizes
 
                     await _dbContext.SaveChangesAsync(cancellationToken);
 
-                    return entity.Entity.Id;
+                    return CommandResult.Ok();
                 }
                 catch (Exception ex)
                 {

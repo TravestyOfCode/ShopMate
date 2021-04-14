@@ -24,7 +24,7 @@ namespace ShopMate.Application.Products
             [Display(Name="Default Unit")]
             public int DefaultUnitSizeId { get; set; }
 
-            public Dictionary<string, string> UnitSizes { get; set; }
+            public Dictionary<int, string> UnitSizes { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Model>

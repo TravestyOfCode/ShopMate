@@ -10,8 +10,8 @@ using ShopMate.Data;
 namespace ShopMate.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210413191019_Switch to using string for keys")]
-    partial class Switchtousingstringforkeys
+    [Migration("20210414131130_Initial Migration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -223,9 +223,10 @@ namespace ShopMate.Data.Migrations
 
             modelBuilder.Entity("ShopMate.Data.Product", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -236,9 +237,8 @@ namespace ShopMate.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("DefaultUnitSizeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("DefaultUnitSizeId")
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("LastModifiedAt")
                         .ValueGeneratedOnAddOrUpdate()
@@ -267,8 +267,10 @@ namespace ShopMate.Data.Migrations
 
             modelBuilder.Entity("ShopMate.Data.ShoppingList", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -317,11 +319,11 @@ namespace ShopMate.Data.Migrations
 
             modelBuilder.Entity("ShopMate.Data.ShoppingListItem", b =>
                 {
-                    b.Property<string>("ShoppingListId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ShoppingListId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ProductId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -348,8 +350,8 @@ namespace ShopMate.Data.Migrations
                         .HasPrecision(9, 5)
                         .HasColumnType("decimal(9,5)");
 
-                    b.Property<string>("UnitSizeId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UnitSizeId")
+                        .HasColumnType("int");
 
                     b.HasKey("ShoppingListId", "ProductId");
 
@@ -366,8 +368,10 @@ namespace ShopMate.Data.Migrations
 
             modelBuilder.Entity("ShopMate.Data.UnitSize", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -548,7 +552,9 @@ namespace ShopMate.Data.Migrations
                     b.HasOne("ShopMate.Data.UnitSize", "UnitSize")
                         .WithMany()
                         .HasForeignKey("UnitSizeId")
-                        .HasConstraintName("FK_ShoppingListItem_UnitSize_UnitSizeId");
+                        .HasConstraintName("FK_ShoppingListItem_UnitSize_UnitSizeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CreatedBy");
 

@@ -14,18 +14,18 @@ namespace ShopMate.Application.Products
     {
         public class Query : IRequest<Model>
         {
-            public string Id { get; set; }
+            public int Id { get; set; }
         }
 
         public class Model
         {
-            public string Id { get; set; }
+            public int Id { get; set; }
 
             public string Name { get; set; }
 
-            public string DefaultUnitSizeId { get; set; }
+            public int DefaultUnitSizeId { get; set; }
 
-            public Dictionary<string, string> UnitSizes { get; set; }
+            public Dictionary<int, string> UnitSizes { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Model>

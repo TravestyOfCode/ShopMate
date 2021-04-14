@@ -2,17 +2,17 @@
 {
     public class ShoppingListItem : EntityBase
     {
-        public string ShoppingListId { get; set; }
+        public int ShoppingListId { get; set; }
 
         public ShoppingList ShoppingList { get; set; }
 
-        public string ProductId { get; set; }
+        public int ProductId { get; set; }
 
         public Product Product { get; set; }
 
         public decimal Quantity { get; set; }
 
-        public string UnitSizeId { get; set; }
+        public int UnitSizeId { get; set; }
 
         public UnitSize UnitSize { get; set; }
 
