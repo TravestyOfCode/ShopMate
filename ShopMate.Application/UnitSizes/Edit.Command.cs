@@ -11,7 +11,7 @@ namespace ShopMate.Application.UnitSizes
     {
         public class Command : IRequest<CommandResult>
         {
-            public string Id { get; set; }
+            public int Id { get; set; }
 
             public string Name { get; set; }
 

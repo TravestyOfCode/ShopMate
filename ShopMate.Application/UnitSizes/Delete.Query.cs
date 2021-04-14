@@ -45,7 +45,7 @@ namespace ShopMate.Application.UnitSizes
                         {
                             Id = p.Id,
                             Name = p.Name
-                        }).SingleOrDefaultAsync(p => p.Id.Equals(request.Id));                    
+                        }).SingleOrDefaultAsync(p => p.Id.Equals(request.Id), cancellationToken);                    
                 }
                 catch (Exception ex)
                 {
