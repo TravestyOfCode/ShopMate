@@ -76,19 +76,18 @@ namespace ShopMate.Web.Controllers
             return View(result);
         }
 
-        // POST: ProductsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> DeleteAsync(Delete.Command command)
         {
-            try
+            if(!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return View(await _mediator.Send(new Delete.Query()));
             }
-            catch
-            {
-                return View();
-            }
+
+            await _mediator.Send(command);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
