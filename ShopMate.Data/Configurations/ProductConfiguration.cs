@@ -24,7 +24,12 @@ namespace ShopMate.Data.Configurations
                 .WithMany()
                 .HasForeignKey(p => p.DefaultUnitSizeId)
                 .HasConstraintName("FK_Product_UnitSize_DefaultUnitSizeId")
-                .OnDelete(DeleteBehavior.ClientSetNull);                
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.HasIndex(p => p.Name)
+                .IsUnique(true)
+                .IsClustered(false)
+                .HasDatabaseName("UX_Product_Name");
         }
     }
 }
