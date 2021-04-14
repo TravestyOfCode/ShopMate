@@ -54,15 +54,9 @@ namespace ShopMate.Application.Products
                         })
                         .SingleOrDefaultAsync(p => p.Id.Equals(request.Id), cancellationToken);
 
-                    //if(result == null)
-                    //{
-                    //    return null;
-                    //}
-
                     result.UnitSizes = await _dbContext.UnitSizes.ToDictionaryAsync(p => p.Id, p => p.Name);
 
                     return result;
-
                 }
                 catch (Exception ex)
                 {
