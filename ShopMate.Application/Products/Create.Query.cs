@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using ShopMate.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +21,7 @@ namespace ShopMate.Application.Products
         {
             public string Name { get; set; }
 
+            [Display(Name="Default Unit")]
             public int DefaultUnitSizeId { get; set; }
 
             public Dictionary<string, string> UnitSizes { get; set; }
