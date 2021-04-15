@@ -14,6 +14,16 @@ namespace ShopMate.Application.Products
             public string Name { get; set; }
 
             public int DefaultUnitSizeId { get; set; }
+
+            internal Product ToProduct()
+            {
+                return new Product()
+                {
+                    Name = Name,
+                    DefaultUnitSizeId = DefaultUnitSizeId
+                };
+
+            }
         }
 
         public class CommandHandler : IRequestHandler<Command, CommandResult>

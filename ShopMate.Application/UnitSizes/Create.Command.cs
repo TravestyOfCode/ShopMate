@@ -12,6 +12,14 @@ namespace ShopMate.Application.UnitSizes
         public class Command : IRequest<CommandResult>
         {
             public string Name { get; set; }
+
+            internal UnitSize ToUnitSize()
+            {
+                return new UnitSize()
+                {
+                    Name = Name
+                };
+            }
         }
 
         public class CommandHandler : IRequestHandler<Command, CommandResult>
