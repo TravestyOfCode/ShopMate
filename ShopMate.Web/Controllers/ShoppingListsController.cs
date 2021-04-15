@@ -22,5 +22,31 @@ namespace ShopMate.Web.Controllers
         {
             return View(await _mediator.Send(query));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateAsync(Create.Query query)
+        {
+            return View(await _mediator.Send(query));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAsync(Create.Command command)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(_mediator.Send(new Create.Query()));
+            }
+
+            await _mediator.Send(command);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditAsync(Edit.Query query)
+        {
+            return View(await _mediator.Send(query));
+        }
     }
 }
