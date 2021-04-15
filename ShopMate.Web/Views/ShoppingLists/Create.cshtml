@@ -1,0 +1,60 @@
+﻿@model ShopMate.Application.ShoppingLists.Create.Model
+@{
+    ViewData["Title"] = "Create";
+    SelectList ProductSelectList = new SelectList(Model.Products, "Key", "Value");
+    SelectList UnitSizeSelectList = new SelectList(Model.UnitSizes, "Key", "Value");
+
+}
+
+<h1>Create</h1>
+
+<h4>ShoppingList</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TripDate" class="control-label"></label>
+                <input asp-for="TripDate" class="form-control" />
+                <span asp-validation-for="TripDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Store" class="control-label"></label>
+                <input asp-for="Store" class="form-control" />
+                <span asp-validation-for="Store" class="text-danger"></span>
+            </div>
+
+            <!-- New ShoppingListItem Form -->
+            <div id="ShoppingListItems">
+                <div class="form-group">
+                    <label class="control-label">Product</label>
+                    <select name="Items[0].ProductId" class="form-control" asp-items="ProductSelectList"></select>
+                    <label class="control-label">Qty</label>
+                    <input name="Items[0].Quantity" class="form-check" />
+                    <label class="control-label">Unit Size</label>
+                    <select name="Items[0].UnitSizeId" class="form-control" asp-items="UnitSizeSelectList"></select>
+                    <button type="button" onclick="AddItem">Add</button>
+                    <button type="button" onclick="RemoveItem(0)">Remove</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
