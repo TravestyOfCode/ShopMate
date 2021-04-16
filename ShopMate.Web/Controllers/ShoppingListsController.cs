@@ -19,7 +19,7 @@ namespace ShopMate.Web.Controllers
 
         [HttpGet]
         public async Task<IActionResult> IndexAsync(Index.Query query)
-        {
+        {   
             return View(await _mediator.Send(query));
         }
 
@@ -47,6 +47,20 @@ namespace ShopMate.Web.Controllers
         public async Task<IActionResult> EditAsync(Edit.Query query)
         {
             return View(await _mediator.Send(query));
+        }
+                
+        public async Task<IActionResult> AddNewItem(int index)
+        {
+            try
+            {
+                var item = await _mediator.Send(new Application.ShoppingListItems.AddNewItem.Query());
+                item.Index = index;
+                return PartialView("_AddNewItemPartial", item);
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
         }
     }
 }

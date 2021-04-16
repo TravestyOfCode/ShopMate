@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using ShopMate.Data;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,6 +17,8 @@ namespace ShopMate.Application.ShoppingLists
             public DateTime TripDate { get; set; }
 
             public string Store { get; set; }
+
+            public Data.ShoppingListItem[] Items { get; set; }
             
             internal ShoppingList ToShoppingList()
             {
@@ -24,8 +27,18 @@ namespace ShopMate.Application.ShoppingLists
                     Title = Title,
                     TripDate = TripDate,
                     Store = Store
+
                 };
             }
+
+            //public class ShoppingListItem
+            //{
+            //    public int ProductId { get; set; }
+
+            //    public decimal Quantity { get; set; }
+
+            //    public int UnitSizeId { get; set; }
+            //}
         }
 
         public class CommandHandler : IRequestHandler<Command, CommandResult>

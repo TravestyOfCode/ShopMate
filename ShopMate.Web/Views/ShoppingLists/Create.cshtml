@@ -11,7 +11,7 @@
 <h4>ShoppingList</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -29,20 +29,11 @@
                 <input asp-for="Store" class="form-control" />
                 <span asp-validation-for="Store" class="text-danger"></span>
             </div>
-
-            <!-- New ShoppingListItem Form -->
-            <div id="ShoppingListItems">
-                <div class="form-group">
-                    <label class="control-label">Product</label>
-                    <select name="Items[0].ProductId" class="form-control" asp-items="ProductSelectList"></select>
-                    <label class="control-label">Qty</label>
-                    <input name="Items[0].Quantity" class="form-check" />
-                    <label class="control-label">Unit Size</label>
-                    <select name="Items[0].UnitSizeId" class="form-control" asp-items="UnitSizeSelectList"></select>
-                    <button type="button" onclick="AddItem">Add</button>
-                    <button type="button" onclick="RemoveItem(0)">Remove</button>
-                </div>
-            </div>
+                        
+            <table id="ShoppingListItems">
+                
+            </table>
+            <button type="button" onclick="AddItem()" class="btn btn-success">Add Item</button>
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -57,4 +48,26 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+        var itemIndex = 0;
+
+    function AddItem() {
+        $.ajax({
+            type: "GET",
+            url: "AddNewItem?index=" + itemIndex,
+            success: function (response) {
+                itemIndex++;
+                $("#ShoppingListItems").append(response);
+            },
+            error: function (response) { alert("There was an unexpected error trying to add a new item.") }
+        })
+        }
+
+        function OnProductChanged(id) {
+            var productSelect = document.querySelector("#ProductId-" + id);
+            var unitSelect = document.querySelector("#UnitSizeId-" + id);
+            unitSelect.value = productSelect.options[productSelect.selectedIndex].getAttribute("data-defaultunitsize");
+        }
+</script>
 }
