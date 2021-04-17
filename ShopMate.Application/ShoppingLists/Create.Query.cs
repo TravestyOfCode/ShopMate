@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using ShopMate.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,14 +22,16 @@ namespace ShopMate.Application.ShoppingLists
         {
             public string Title { get; set; }
 
+            [DataType(DataType.Date)]
             public DateTime TripDate { get; set; }
 
             public string Store { get; set; }
 
-            public Dictionary<int, string> Products { get; set; }
+            public List<ShoppingListItem> Items { get; set; }
 
-            public Dictionary<int, string> UnitSizes { get; set; }
-            
+            public List<Product> Products { get; set; }
+
+            public List<UnitSize> UnitSizes { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, Model>
@@ -53,9 +57,19 @@ namespace ShopMate.Application.ShoppingLists
                 {
                     return new Model()
                     {
-                        Products = await _dbContext.Products.ToDictionaryAsync(p => p.Id, p => p.Name, cancellationToken),
-
-                        UnitSizes = await _dbContext.UnitSizes.ToDictionaryAsync(p => p.Id, p => p.Name, cancellationToken)
+                        TripDate = DateTime.Now,
+                        Items = new List<ShoppingListItem>(),
+                        Products = await _dbContext.Products.Select(p => new Product()
+                        {
+                            Id = p.Id,
+                            Name = p.Name,
+                            DefaultUnitSizeId = p.DefaultUnitSizeId
+                        }).ToListAsync(cancellationToken),
+                        UnitSizes = await _dbContext.UnitSizes.Select(p => new UnitSize()
+                        {
+                            Id = p.Id,
+                            Name = p.Name
+                        }).ToListAsync(cancellationToken)
                     };
                 }
                 catch (Exception ex)

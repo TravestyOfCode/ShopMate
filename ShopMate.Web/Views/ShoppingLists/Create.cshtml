@@ -1,9 +1,6 @@
 ﻿@model ShopMate.Application.ShoppingLists.Create.Model
 @{
     ViewData["Title"] = "Create";
-    SelectList ProductSelectList = new SelectList(Model.Products, "Key", "Value");
-    SelectList UnitSizeSelectList = new SelectList(Model.UnitSizes, "Key", "Value");
-
 }
 
 <h1>Create</h1>
@@ -12,32 +9,48 @@
 <hr />
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Create">
+        <form asp-action="Create"  onsubmit="OnFormSubmit()" >
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="TripDate" class="control-label"></label>
-                <input asp-for="TripDate" class="form-control" />
-                <span asp-validation-for="TripDate" class="text-danger"></span>
+            <div class="form-inline">
+                <div class="form-group">
+                    <label asp-for="TripDate" class="control-label"></label>
+                    <input asp-for="TripDate" class="form-control" />
+                    <span asp-validation-for="TripDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Store" class="control-label"></label>
+                    <input asp-for="Store" class="form-control" />
+                    <span asp-validation-for="Store" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Store" class="control-label"></label>
-                <input asp-for="Store" class="form-control" />
-                <span asp-validation-for="Store" class="text-danger"></span>
-            </div>
-                        
-            <table id="ShoppingListItems">
-                
-            </table>
-            <button type="button" onclick="AddItem()" class="btn btn-success">Add Item</button>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            <table id="ShoppingListItems" class="table">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.Items[0].Product.Name)</th>
+                        <th>@Html.DisplayNameFor(m => m.Items[0].Quantity)</th>
+                        <th>@Html.DisplayNameFor(m => m.Items[0].UnitSizeId)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>
+                            <button type="button" onclick="AddItem()" class="btn btn-success w-100">Add Item</button>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td><input type="submit" value="Save" class="btn btn-primary w-100" /></td>
+                    </tr>
+                </tfoot>
+            </table>
         </form>
     </div>
 </div>
@@ -46,28 +59,94 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<template>
+    <tr id="RowIDX">
+        <td>
+            <input type="hidden" name="Items.ProductId" id="Items.ProductId-IDX" />
+            <input type="text" name="Items.ProductName" id="Items.ProductName-IDX" list="Products" class="form-control" onblur="OnProductChanged(IDX)" />
+        </td>
+        <td>
+            <input type="text" name="Items.Quantity" class="form-control" />
+        </td>
+        <td>
+            <input type="hidden" name="Items.UnitSizeId" id="Items.UnitSizeId-IDX"/>
+            <input type="text" name="Items.UnitSizeName" id="Items.UnitSizeName-IDX" list="Units" class="form-control" />
+        </td>
+        <td>
+            <button type="button" onclick="RemoveItem(IDX)" class="btn btn-danger">Remove</button>
+            <input type="hidden" name="Items.Index" value="IDX" />
+        </td>
+    </tr>
+</template>
+
+<datalist id="Products">
+    @foreach (var product in Model.Products)
+    {
+        <option data-value="@product.Id" data-unitId="@product.DefaultUnitSizeId" value="@product.Name">@product.Name</option>
+    }
+</datalist>
+<datalist id="Units">
+    @foreach (var unit in Model.UnitSizes)
+    {
+        <option value="@unit.Id">@unit.Name</option>
+    }
+</datalist>
+
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-<script>
+    <script>
         var itemIndex = 0;
 
-    function AddItem() {
-        $.ajax({
-            type: "GET",
-            url: "AddNewItem?index=" + itemIndex,
-            success: function (response) {
-                itemIndex++;
-                $("#ShoppingListItems").append(response);
-            },
-            error: function (response) { alert("There was an unexpected error trying to add a new item.") }
-        })
+        function AddItem()
+        {
+            var template = document.getElementsByTagName("template").item(0).cloneNode(true);            
+            template.innerHTML = template.innerHTML.replace(/IDX/gi, itemIndex);
+            var clone = template.content.cloneNode(true);            
+            var tableBody = document.getElementsByTagName("tbody").item(0);
+            tableBody.append(clone);
+            itemIndex++;
+        }
+
+        function RemoveItem(id)
+        {
+            var row = document.getElementById("Row" + id);
+            row.parentElement.removeChild(row);
         }
 
         function OnProductChanged(id) {
-            var productSelect = document.querySelector("#ProductId-" + id);
-            var unitSelect = document.querySelector("#UnitSizeId-" + id);
-            unitSelect.value = productSelect.options[productSelect.selectedIndex].getAttribute("data-defaultunitsize");
+            // Update the default unit size dropdown
         }
-</script>
+
+        function OnFormSubmit() {
+            getRealValues();
+        }
+
+        function getRealValues() {            
+            var tbody = document.getElementsByTagName("tbody").item(0);
+            for (var index = 0; index < tbody.children.length; index++ )
+            {
+                var id = tbody.children.item(index).id.replace("Row", "");
+
+                // Get the ProductName value and Id elements
+                var productId = document.getElementById("Items.ProductId-" + id);
+                var productName = document.getElementById("Items.ProductName-" + id);
+
+                // Use the value to find the product option and get the data-value
+                var productOption = $("#Products option[value='" + productName.value + "']");
+                productId.value = productOption.data("value");
+
+                // Get the UnitId and Name elements
+                var unitId = document.getElementById("Items.UnitSizeId-" + id);
+                var unitName = document.getElementById("Items.UnitSizeName-" + id);
+
+                // Use the name value to find the units option and get the data-value
+                var unitOption = $("#Units option[value='" + unitName.value + "']");
+                unitId.value = unitOption.data("value");
+            }
+            
+        }
+    </script>
 }

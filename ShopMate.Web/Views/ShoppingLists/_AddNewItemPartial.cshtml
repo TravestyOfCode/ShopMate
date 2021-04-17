@@ -1,30 +1,11 @@
-﻿@model ShopMate.Application.ShoppingListItems.AddNewItem.Model
-
-@{ 
-    var id = Guid.NewGuid();
+﻿@{ 
+    var rowId = Guid.NewGuid();
 }
 
-<div class="form-inline" id="@id">
-    <input type="hidden" name="Items.Index" value="@id" />
-    <select id="ProductId-@id" name="Items.ProductId" class="form-control" onchange="OnProductChanged('@id')">
-        @foreach (var product in Model.Products)
-        {
-            <option value="@product.Key" data-defaultunitsize="@product.Value.DefaultUnitId">@product.Value.Name</option>
-        }
-    </select>
-    <input id="Quantity-@id" name="Items.Quantity" class="form-control" />
-    <select id="UnitSizeId-@id" name="Items.UnitSizeId" class="form-control">
-        @foreach (var unitsize in Model.UnitSizes)
-        {
-            if (Model.Products.First().Value.DefaultUnitId == unitsize.Key)
-            {
-                <option value="@unitsize.Key" selected>@unitsize.Value</option>
-            }
-            else
-            {
-                <option value="@unitsize.Key">@unitsize.Value</option>
-            }
-        }
-    </select>
-    <button type="button" onclick="RemoveItem" class="btn btn-danger">Remove</button>
-</div>
+<tr id="@rowId" class="form-group">
+    <td><input type="text" list="Products" id="ProductId-@rowId" class="form-control" onchange="OnProductChanged(@rowId)" /></td>
+    <td><input type="text" id="Quantity-@rowId" class="form-control" /></td>
+    <td><input type="text" list="Units" id="UnitSizeId-@rowId" class="form-control" /></td>
+    <td><button type="button" onclick="RemoveItem('@rowId')" class="btn btn-danger">Remove</button></td>
+    <td><input type="hidden" name="Items.Index" value="@rowId" /></td>
+</tr>

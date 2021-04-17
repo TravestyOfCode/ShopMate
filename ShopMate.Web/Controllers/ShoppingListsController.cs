@@ -49,13 +49,11 @@ namespace ShopMate.Web.Controllers
             return View(await _mediator.Send(query));
         }
                 
-        public async Task<IActionResult> AddNewItem(int index)
+        public IActionResult AddNewItem(int index)
         {
             try
             {
-                var item = await _mediator.Send(new Application.ShoppingListItems.AddNewItem.Query());
-                item.Index = index;
-                return PartialView("_AddNewItemPartial", item);
+                return PartialView("_AddNewItemPartial");
             }
             catch
             {
